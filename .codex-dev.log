@@ -1,0 +1,42 @@
+
+> theshades@1.0.0 dev
+> next dev
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1278ms
+ ○ Compiling / ...
+ ✓ Compiled / in 4.5s (542 modules)
+ GET / 200 in 4620ms
+ GET /_next/static/webpack/f5a50eb381826da5.webpack.hot-update.json 404 in 4644ms
+ GET / 200 in 45ms
+ ✓ Compiled /products in 178ms (512 modules)
+ ✓ Compiled /products/[category] in 403ms (611 modules)
+ GET / 200 in 63ms
+ ✓ Compiled /login in 174ms (617 modules)
+ ✓ Compiled /products/[category]/[slug] in 293ms (625 modules)
+ ✓ Compiled /api/auth/me in 230ms (394 modules)
+ GET /api/auth/me 401 in 296ms
+ ✓ Compiled /api/auth/login in 122ms (396 modules)
+ POST /api/auth/login 200 in 29697ms
+ POST /api/auth/login 500 in 30008ms
+ ✓ Compiled in 261ms (366 modules)
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 1701ms (855 modules)
+ GET /products/venetian-blinds/aluminium-venetian-blind 500 in 525ms
+ GET / 500 in 16ms
+ ✓ Compiled /_not-found in 251ms (858 modules)
+ GET / 404 in 398ms
+ GET /_next/static/css/app/layout.css?v=1774936645114 404 in 55ms
+ GET /_next/static/chunks/main-app.js?v=1774936645114 404 in 57ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 57ms
+ GET /_next/static/chunks/app/layout.js 404 in 57ms
+ ✓ Compiled in 787ms (855 modules)
+ ✓ Compiled in 746ms (855 modules)
+ ✓ Compiled in 193ms (855 modules)
+ ✓ Compiled in 1715ms (855 modules)
+ ✓ Compiled in 432ms (855 modules)
+ ✓ Compiled in 428ms (869 modules)

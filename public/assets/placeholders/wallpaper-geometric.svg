@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" fill="none">
+  <rect width="1200" height="900" fill="#2E2A28"/>
+  <path d="M172 126L412 262L172 398L-68 262L172 126Z" fill="#C9A96E"/>
+  <path d="M602 126L842 262L602 398L362 262L602 126Z" fill="#E8D5B0"/>
+  <path d="M1032 126L1272 262L1032 398L792 262L1032 126Z" fill="#B08D4C"/>
+  <path d="M172 500L412 636L172 772L-68 636L172 500Z" fill="#E8D5B0"/>
+  <path d="M602 500L842 636L602 772L362 636L602 500Z" fill="#C9A96E"/>
+  <path d="M1032 500L1272 636L1032 772L792 636L1032 500Z" fill="#E0C28D"/>
+  <text x="600" y="842" text-anchor="middle" fill="#F7F2EA" font-family="Arial, sans-serif" font-size="44" font-weight="700">Geometric Metallic Wallpaper</text>
+</svg>

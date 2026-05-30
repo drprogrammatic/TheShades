@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" fill="none">
+  <rect width="1200" height="900" fill="#F3EEE7"/>
+  <path d="M0 0H1200V900H0V0Z" fill="url(#a)"/>
+  <path d="M120 0V900M240 0V900M360 0V900M480 0V900M600 0V900M720 0V900M840 0V900M960 0V900M1080 0V900" stroke="#D8CDBD" stroke-width="2"/>
+  <path d="M0 120H1200M0 240H1200M0 360H1200M0 480H1200M0 600H1200M0 720H1200M0 840H1200" stroke="#E6DDD1" stroke-width="2"/>
+  <text x="600" y="790" text-anchor="middle" fill="#8A7761" font-family="Arial, sans-serif" font-size="44" font-weight="700">Textured Linen Wallpaper</text>
+  <defs>
+    <linearGradient id="a" x1="0" y1="0" x2="1200" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F6F2EB"/>
+      <stop offset="1" stop-color="#E6DDD1"/>
+    </linearGradient>
+  </defs>
+</svg>
