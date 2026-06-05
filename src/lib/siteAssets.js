@@ -39,7 +39,7 @@ const REMOTE_TO_LOCAL = {
 export function localizeImagePath(path, fallback = LOCAL_ASSETS.placeholder) {
   if (!path) return fallback;
   if (REMOTE_TO_LOCAL[path]) return REMOTE_TO_LOCAL[path];
-  if (path.startsWith('http://') || path.startsWith('https://')) return fallback;
+  // Pass external URLs through — only replace known mac.in URLs (mapped above)
   return path;
 }
 
