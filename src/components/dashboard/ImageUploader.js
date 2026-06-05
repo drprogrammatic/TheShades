@@ -44,17 +44,18 @@ export default function ImageUploader({ value, onChange, placeholder = 'Drag and
         body: formData,
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        throw new Error('Upload failed');
+        throw new Error(data.error || `Upload failed (${res.status})`);
       }
 
-      const data = await res.json();
       if (data.url) {
         onChange(data.url);
       }
     } catch (err) {
       console.error(err);
-      alert('Error uploading file');
+      alert(`Upload error: ${err.message}`);
     } finally {
       setUploading(false);
     }
