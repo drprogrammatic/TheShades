@@ -486,6 +486,31 @@ ul, ol { list-style: none; }
 }
 
 
+/* On pages without a dark hero, show a solid white header with dark text */
+
+.header.light-top:not(.scrolled) {
+
+  background: rgba(255, 255, 255, 0.97);
+
+  box-shadow: var(--shadow-sm);
+
+}
+
+.header.light-top:not(.scrolled) .logo,
+
+.header.light-top:not(.scrolled) .nav-link {
+
+  color: var(--color-heading);
+
+}
+
+.header.light-top:not(.scrolled) .menu-toggle span {
+
+  background: var(--color-heading);
+
+}
+
+
 .nav {
 
   display: flex;
@@ -1676,8 +1701,16 @@ ul, ol { list-style: none; }
 
 .breadcrumb span {
 
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.75);
 
+}
+
+.page-header .breadcrumb a {
+  color: var(--color-accent);
+}
+
+.page-header .breadcrumb span {
+  color: rgba(255,255,255,0.75);
 }
 
 
