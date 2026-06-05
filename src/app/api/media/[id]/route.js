@@ -11,11 +11,16 @@ export async function GET(request, { params }) {
       return new NextResponse('Not found', { status: 404 });
     }
 
-    return new NextResponse(media.data, {
+    // .lean() converts Mongoose Buffers to BSON Binary — convert back to Buffer
+    const buf = Buffer.isBuffer(media.data)
+      ? media.data
+      : Buffer.from(media.data.buffer ?? media.data);
+
+    return new NextResponse(buf, {
       headers: {
         'Content-Type': media.contentType,
         'Cache-Control': 'public, max-age=31536000, immutable',
-        'Content-Length': String(media.size || media.data.length),
+        'Content-Length': String(buf.length),
       },
     });
   } catch (err) {

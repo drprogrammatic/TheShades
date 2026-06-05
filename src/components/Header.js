@@ -22,6 +22,11 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hasSession, setHasSession] = useState(false);
 
+  // Pages that start with a dark hero/page-header behind the nav
+  const darkTopPages = ['/', '/products', '/about', '/blog', '/contact'];
+  const hasDarkTop = darkTopPages.includes(pathname) || pathname.startsWith('/products/');
+
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
@@ -38,7 +43,7 @@ export default function Header() {
 
   return (
     <>
-      <header className={`header ${scrolled ? 'scrolled' : ''}`}>
+      <header className={`header ${scrolled ? 'scrolled' : ''} ${!hasDarkTop ? 'light-top' : ''}`}>
         <div className="header-inner">
           <Link href="/" className="logo">
             THE <span>SHADES</span>
