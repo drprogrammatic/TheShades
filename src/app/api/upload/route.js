@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
-import Media from '@/models/Media';
 
-// Max 8MB per upload
-const MAX_SIZE = 8 * 1024 * 1024;
+const MAX_SIZE = 4 * 1024 * 1024; // 4MB — safe under Vercel's 4.5MB limit
 
 export async function POST(request) {
   try {
@@ -18,12 +15,16 @@ export async function POST(request) {
     const buffer = Buffer.from(bytes);
 
     if (buffer.length > MAX_SIZE) {
-      return NextResponse.json({ error: 'File too large. Maximum size is 8MB.' }, { status: 400 });
+      return NextResponse.json({ error: 'File too large. Maximum size is 4MB.' }, { status: 400 });
     }
 
     const contentType = file.type || 'image/jpeg';
     const originalName = (file.name || 'image.jpg').replace(/[^a-zA-Z0-9.\-_]/g, '');
     const filename = `${Date.now()}-${originalName}`;
+
+    // Lazy-import so a missing MONGODB_URI doesn't crash the module at load time
+    const { default: dbConnect } = await import('@/lib/mongodb');
+    const { default: Media } = await import('@/models/Media');
 
     await dbConnect();
     const media = await Media.create({
@@ -37,6 +38,6 @@ export async function POST(request) {
     return NextResponse.json({ url });
   } catch (err) {
     console.error('Upload error:', err);
-    return NextResponse.json({ error: 'Server error during upload' }, { status: 500 });
+    return NextResponse.json({ error: err.message || 'Server error during upload' }, { status: 500 });
   }
 }

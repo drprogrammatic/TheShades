@@ -2,6 +2,29 @@
 
 import { useState, useRef } from 'react';
 
+// Compress and resize image client-side to stay well within Vercel's 4.5MB limit
+function compressImage(file, maxWidth = 1200, quality = 0.82) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const scale = Math.min(1, maxWidth / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(
+        (blob) => resolve(blob || file),
+        'image/jpeg',
+        quality,
+      );
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
+}
+
 export default function ImageUploader({ value, onChange, placeholder = 'Drag and drop an image here or click to upload' }) {
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -36,15 +59,19 @@ export default function ImageUploader({ value, onChange, placeholder = 'Drag and
   const handleFile = async (file) => {
     setUploading(true);
     try {
+      // Compress before uploading so we stay under Vercel's body size limit
+      const compressed = file.type === 'image/gif' ? file : await compressImage(file);
+
       const formData = new FormData();
-      formData.append('file', file);
-      
+      formData.append('file', compressed, file.name.replace(/\.[^.]+$/, '.jpg'));
+
       const res = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });
 
-      const data = await res.json();
+      let data = {};
+      try { data = await res.json(); } catch (_) {}
 
       if (!res.ok) {
         throw new Error(data.error || `Upload failed (${res.status})`);
@@ -63,7 +90,7 @@ export default function ImageUploader({ value, onChange, placeholder = 'Drag and
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-      <div 
+      <div
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
@@ -80,22 +107,22 @@ export default function ImageUploader({ value, onChange, placeholder = 'Drag and
           overflow: 'hidden'
         }}
       >
-        <input 
+        <input
           ref={inputRef}
-          type="file" 
-          accept="image/*" 
-          onChange={handleChange} 
-          style={{ display: 'none' }} 
+          type="file"
+          accept="image/*"
+          onChange={handleChange}
+          style={{ display: 'none' }}
         />
-        
+
         {uploading ? (
-          <div style={{ color: 'var(--color-text-light)' }}>Uploading...</div>
+          <div style={{ color: 'var(--color-text-light)' }}>Compressing &amp; uploading...</div>
         ) : value ? (
           <div>
-            <img 
-              src={value} 
-              alt="Preview" 
-              style={{ maxHeight: '150px', maxWidth: '100%', objectFit: 'contain', margin: '0 auto' }} 
+            <img
+              src={value}
+              alt="Preview"
+              style={{ maxHeight: '150px', maxWidth: '100%', objectFit: 'contain', margin: '0 auto' }}
             />
             <div style={{ fontSize: '0.8rem', marginTop: '0.5rem', color: 'var(--color-text-light)' }}>Click or drag a new image to replace</div>
           </div>
@@ -107,11 +134,11 @@ export default function ImageUploader({ value, onChange, placeholder = 'Drag and
         )}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <input 
-          type="text" 
-          value={value || ''} 
-          onChange={(e) => onChange(e.target.value)} 
-          placeholder="Or paste URL here..." 
+        <input
+          type="text"
+          value={value || ''}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Or paste URL here..."
           style={{ flex: 1, padding: '0.5rem', borderRadius: '0.25rem', border: '1px solid var(--color-border)' }}
         />
         {value && <button type="button" onClick={(e) => { e.stopPropagation(); onChange(''); }} className="btn btn-outline" style={{ padding: '0.5rem 1rem' }}>Clear</button>}
