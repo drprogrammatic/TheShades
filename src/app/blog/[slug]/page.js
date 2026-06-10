@@ -1,7 +1,12 @@
 import Link from 'next/link';
+import Script from 'next/script';
 import { notFound } from 'next/navigation';
 import dbConnect from '@/lib/mongodb';
 import BlogPost from '@/models/BlogPost';
+
+// PubClarity ad-tag test: only this one article loads the tag + ad slot for now.
+const PC_TEST_SLUG = 'transform-your-home-in-2026-modern-decor-ideas-that-elevate-every-space';
+const PC_SITE_KEY = 'pc_theshades_zi33vw';
 
 async function getPost(slug) {
   try {
@@ -58,6 +63,7 @@ export default async function BlogPostPage({ params }) {
   if (!post) notFound();
 
   const relatedPosts = await getRelated(params.slug);
+  const pcAdsEnabled = params.slug === PC_TEST_SLUG;
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -106,6 +112,25 @@ export default async function BlogPostPage({ params }) {
           )}
 
           <div className="rich-content" dangerouslySetInnerHTML={{ __html: post.content }} />
+
+          {/* PubClarity ad slots — test article only */}
+          {pcAdsEnabled && (
+            <>
+              {/* Instream video player (content + pre-roll VAST).
+                  data-pc-type makes the page declare the slot type so the
+                  player renders even if the backend config.slots is empty. */}
+              <div
+                data-pc-slot="article_video"
+                data-pc-type="video"
+                style={{ margin: '2rem auto', maxWidth: 640, aspectRatio: '16 / 9', borderRadius: 12 }}
+              />
+              {/* Display leaderboard */}
+              <div
+                data-pc-slot="leaderboard"
+                style={{ margin: '2rem auto', maxWidth: 728, minHeight: 90 }}
+              />
+            </>
+          )}
 
           {post.tags?.length > 0 && (
             <div style={{ marginTop: '2rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -157,6 +182,16 @@ export default async function BlogPostPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
+
+      {/* PubClarity tag loader — test article only */}
+      {pcAdsEnabled && (
+        <Script
+          async
+          src="https://pubclarity.com/tag.js"
+          data-site={PC_SITE_KEY}
+          strategy="afterInteractive"
+        />
+      )}
     </>
   );
 }
