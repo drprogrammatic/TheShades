@@ -116,9 +116,12 @@ export default async function BlogPostPage({ params }) {
           {/* PubClarity ad slots — test article only */}
           {pcAdsEnabled && (
             <>
-              {/* Instream video player (content + pre-roll VAST) */}
+              {/* Instream video player (content + pre-roll VAST).
+                  data-pc-type makes the page declare the slot type so the
+                  player renders even if the backend config.slots is empty. */}
               <div
                 data-pc-slot="article_video"
+                data-pc-type="video"
                 style={{ margin: '2rem auto', maxWidth: 640, aspectRatio: '16 / 9', borderRadius: 12 }}
               />
               {/* Display leaderboard */}
