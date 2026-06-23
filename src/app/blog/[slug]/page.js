@@ -58,25 +58,12 @@ export async function generateMetadata({ params }) {
   };
 }
 
-// Split article HTML roughly in half at a paragraph boundary, so an ad can be
-// injected mid-article (higher viewability) without breaking markup.
-function splitContentAtMidpoint(html) {
-  if (!html) return ['', ''];
-  const parts = html.split('</p>');
-  if (parts.length < 3) return [html, '']; // too short to split cleanly
-  const mid = Math.floor(parts.length / 2);
-  return [parts.slice(0, mid).join('</p>') + '</p>', parts.slice(mid).join('</p>')];
-}
-
 export default async function BlogPostPage({ params }) {
   const post = await getPost(params.slug);
   if (!post) notFound();
 
   const relatedPosts = await getRelated(params.slug);
   const pcAdsEnabled = params.slug === PC_TEST_SLUG;
-  const [contentTop, contentBottom] = pcAdsEnabled
-    ? splitContentAtMidpoint(post.content)
-    : [post.content, ''];
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -116,6 +103,17 @@ export default async function BlogPostPage({ params }) {
 
           <h1>{post.title}</h1>
 
+          {/* PubClarity video player — ABOVE THE FOLD (right under the headline).
+              The page ships an empty div; tag.js builds the IMA player into it and
+              docks it as a floater on scroll. data-pc-type declares the slot type. */}
+          {pcAdsEnabled && (
+            <div
+              data-pc-slot="article_video"
+              data-pc-type="video"
+              style={{ margin: '1.5rem auto', maxWidth: 640, aspectRatio: '16 / 9', borderRadius: 12 }}
+            />
+          )}
+
           {post.featuredImage && (
             <img
               src={post.featuredImage}
@@ -124,25 +122,7 @@ export default async function BlogPostPage({ params }) {
             />
           )}
 
-          {/* Top half of the article body */}
-          <div className="rich-content" dangerouslySetInnerHTML={{ __html: contentTop }} />
-
-          {/* PubClarity video player — injected MID-ARTICLE for viewability.
-              The page ships an empty div; tag.js builds the IMA player into it.
-              data-pc-type declares the slot type so it renders even if the
-              backend config.slots is empty. */}
-          {pcAdsEnabled && (
-            <div
-              data-pc-slot="article_video"
-              data-pc-type="video"
-              style={{ margin: '2.5rem auto', maxWidth: 640, aspectRatio: '16 / 9', borderRadius: 12 }}
-            />
-          )}
-
-          {/* Bottom half of the article body */}
-          {pcAdsEnabled && contentBottom && (
-            <div className="rich-content" dangerouslySetInnerHTML={{ __html: contentBottom }} />
-          )}
+          <div className="rich-content" dangerouslySetInnerHTML={{ __html: post.content }} />
 
           {/* Display leaderboard — below the article body */}
           {pcAdsEnabled && (
