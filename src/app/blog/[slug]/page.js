@@ -110,6 +110,7 @@ export default async function BlogPostPage({ params }) {
             <div
               data-pc-slot="article_video"
               data-pc-type="video"
+              data-pc-context="home-decor"
               style={{ margin: '1.5rem auto', maxWidth: 640, aspectRatio: '16 / 9', borderRadius: 12 }}
             />
           )}
